@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building...."
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Running unit tests"
+                echo "Running..."
+            }
+        }
+        stage('Code Quality Check') {
+            steps {
+                echo "Checking..."
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo "Deploying...."
+            }
+        }
+        stage('Approval') {
+            steps {
+                script {
+                    sleep 10
+                }
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo ")"
+            }
+        }
+    }
+}
