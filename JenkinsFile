@@ -1,38 +1,62 @@
 pipeline {
     agent any
+    environment {
+        DIRECTORY_PATH = "/Users/mohakahuja/.jenkins"
+        TESTING_ENVIRONMENT = "AWS EC2 instance"
+        PRODUCTION_ENVIRONMENT = "AWS EC2 instance"
+    }
+    //adding comments
     stages {
         stage('Build') {
             steps {
-                echo "Building...."
+                echo "Fetching source code from: ${env.DIRECTORY_PATH}"
+                echo "Compiling the code and generating necessary artifacts"
             }
         }
         stage('Test') {
             steps {
                 echo "Running unit tests"
-                echo "Running..."
+                echo "Running integration tests"
             }
         }
         stage('Code Quality Check') {
             steps {
-                echo "Checking..."
+                echo "Checking the quality of the code"
             }
         }
-        stage('Deploy') {
+        stage('Security Scan') {
             steps {
-                echo "Deploying...."
+                echo "Scanning for the security of the application"
             }
         }
-        stage('Approval') {
+        stage('Deploy to a staging/testing server') {
             steps {
-                script {
-                    sleep 10
-                }
+                echo "Deploying the application to testing environment: ${env.TESTING_ENVIRONMENT}"
+            }
+        }
+        stage('Integration Tests after staging') {
+            steps {
+                echo "Running integration tests"
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo ")"
+                echo "Deploying the application to production environment: ${env.PRODUCTION_ENVIRONMENT}"
             }
+        }
+    }
+    post {
+        success {
+            // Send success email notification
+            emailext body: 'Pipeline run successfully',
+                     subject: 'Pipeline Success',
+                     to: 'somanshahuja2000@gmail.com'
+        }
+        failure {
+            // Send failure email notification sending
+            emailext body: 'Pipeline failed',
+                     subject: 'Pipeline Failure',
+                     to: 'somanshahuja2000@gmail.com'
         }
     }
 }
