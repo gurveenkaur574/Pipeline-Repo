@@ -1,62 +1,115 @@
-pipeline {
+/*This pipeline is specially designed for the games desing in unity 3D game engine. 
+It is a simple pipeline that demonstrates the stages involved in the development and deployment of a Unity game.
+*/
+pipeline 
+{
     agent any
-    environment {
-        DIRECTORY_PATH = "/Users/mohakahuja/.jenkins"
-        TESTING_ENVIRONMENT = "AWS EC2 instance"
-        PRODUCTION_ENVIRONMENT = "AWS EC2 instance"
-    }
-    //adding comments
-    stages {
-        stage('Build') {
-            steps {
-                echo "Fetching source code from: ${env.DIRECTORY_PATH}"
-                echo "Compiling the code and generating necessary artifacts"
+        stages 
+            {
+                stage('Build') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Build the Unity project.'
+                                echo 'Tool: Unity command line interface.'
+                            }
+                    }
+            
+                stage('Unit and Integration Tests') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Run unit tests and integration tests.'
+                                echo 'Tool: Unity Test Runner.'
+                            }   
+                    }
+            
+                stage('Code Analysis') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Analyse the code to ensure it meets industry standards.'
+                                echo 'Tool: SonarQube.'
+                            }
+                    }
+                stage('Security Scan') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Perform a security scan on the code to identify any vulnerabilities.'
+                                echo 'Tool: OWASP Dependency-Check.'
+                            }
+                        post 
+                            {
+                                success 
+                                        {
+                                            script
+                                                {
+                                                    EmailNotification(env.STAGE_NAME);
+                                                }                                         
+                                        }
+                                failure 
+                                        {
+                                            script
+                                                {
+                                                    EmailNotification(env.STAGE_NAME);
+                                                }
+                                        }
+                            }
+                    }
+                stage('Deploy to Staging') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Deploy the game to a staging server or a test environment.'
+                                echo 'Tool: AWS CLI.'
+                            }
+                    }
+                stage('Integration Tests on Staging') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Run integration tests on the staging environment.'
+                                echo 'Tool: Unity Test Runner.'
+                            }
+                        post 
+                            {
+                                success 
+                                        {
+                                            script
+                                                {
+                                                    EmailNotification(env.STAGE_NAME);
+                                                }
+                                        }                           
+                                failure 
+                                        {
+                                            script
+                                                {
+                                                    EmailNotification(env.STAGE_NAME);
+                                                }
+                                        }
+                            }
+                    }
+                stage('Deploy to Production') 
+                    {
+                        steps 
+                            {
+                                echo 'Task: Deploying or  publishing it to a platform (e.g., Google).'
+                                echo 'Tool: Fastlane or similar.'
+                            }
+                    }
             }
-        }
-        stage('Test') {
-            steps {
-                echo "Running unit tests"
-                echo "Running integration tests"
-            }
-        }
-        stage('Code Quality Check') {
-            steps {
-                echo "Checking the quality of the code"
-            }
-        }
-        stage('Security Scan') {
-            steps {
-                echo "Scanning for the security of the application"
-            }
-        }
-        stage('Deploy to a staging/testing server') {
-            steps {
-                echo "Deploying the application to testing environment: ${env.TESTING_ENVIRONMENT}"
-            }
-        }
-        stage('Integration Tests after staging') {
-            steps {
-                echo "Running integration tests"
-            }
-        }
-        stage('Deploy to Production') {
-            steps {
-                echo "Deploying the application to production environment: ${env.PRODUCTION_ENVIRONMENT}"
-            }
-        }
-    }
-    post {
-        success {
-            // Send success email notification
-            emailext body: 'Pipeline run successfully in jenkins',
-                     subject: 'Pipeline Success',
-                     to: 'somanshahuja2000@gmail.com'
-        }
-        failure {
-            // Send failure email notification sending
-            emailext body: 'Pipeline failed',
-                     subject: 'Pipeline Failure',
-                     to: 'somanshahuja2000@gmail.com'
-        }
-    }
+}
+
+def EmailNotification(stageName) 
+{
+    def recipient = 'gurveendhillon574@gmail.com'
+    def subject = "Jenkins Stage: ${stageName}"
+    def body = "The '${stageName}' stage finished success"
+    def logFile = currentBuild.rawBuild.getLogFile()
+    def logContent = readFile(logFile.toString())
+    def emailBody = "${body}\nbuild log:\n${logContent}"
+    mail to: recipient, 
+    subject: subject, 
+    body: emailBody
 }
