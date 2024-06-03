@@ -1,6 +1,3 @@
-/*This pipeline is specially designed for the games desing in unity 3D game engine. 
-It is a simple pipeline that demonstrates the stages involved in the development and deployment of a Unity game.
-*/
 pipeline 
 {
     agent any
@@ -11,7 +8,7 @@ pipeline
                         steps 
                             {
                                 echo 'Task: Build the Unity project.'
-                                echo 'Tool: Unity command line interface.'
+                                echo 'Tool: Building.....'
                             }
                     }
             
@@ -20,7 +17,7 @@ pipeline
                         steps 
                             {
                                 echo 'Task: Run unit tests and integration tests.'
-                                echo 'Tool: Unity Test Runner.'
+                                echo 'Tool: Running the Tests.....'
                             }   
                     }
             
@@ -28,7 +25,7 @@ pipeline
                     {
                         steps 
                             {
-                                echo 'Task: Analyse the code to ensure it meets industry standards.'
+                                echo 'Task: Analyse the code.'
                                 echo 'Tool: SonarQube.'
                             }
                     }
@@ -36,7 +33,7 @@ pipeline
                     {
                         steps 
                             {
-                                echo 'Task: Perform a security scan on the code to identify any vulnerabilities.'
+                                echo 'Task: Perform a security scan on code....'
                                 echo 'Tool: OWASP Dependency-Check.'
                             }
                         post 
@@ -61,7 +58,7 @@ pipeline
                     {
                         steps 
                             {
-                                echo 'Task: Deploy the game to a staging server or a test environment.'
+                                echo 'Task: Deploying it to staging server.....'
                                 echo 'Tool: AWS CLI.'
                             }
                     }
@@ -69,7 +66,7 @@ pipeline
                     {
                         steps 
                             {
-                                echo 'Task: Run integration tests on the staging environment.'
+                                echo 'Task: Run integration now.....'
                                 echo 'Tool: Unity Test Runner.'
                             }
                         post 
