@@ -8,7 +8,7 @@ pipeline
                         steps 
                             {
                                 echo 'Task: Build the Unity project.'
-                                echo 'Tool: Building it now.....'
+                                echo 'Tool: Building it.....'
                             }
                     }
             
